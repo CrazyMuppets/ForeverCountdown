@@ -1,58 +1,56 @@
-document.addEventListener('DOMContentLoaded', () => {
-  const statusEl = document.getElementById('status');
-  const countdownEl = document.getElementById('countdown');
+const statusEl = document.getElementById('status');
+const countdownEl = document.getElementById('countdown');
 
-  if (!statusEl || !countdownEl) {
+if (!statusEl || !countdownEl) {
+  throw new Error('Required countdown elements not found.');
+}
+
+const EVENT_DATE = new Date(Date.UTC(new Date().getFullYear(), 10, 4, 23, 0, 0));
+
+function formatCountdown(ms) {
+  const totalSeconds = Math.max(0, Math.floor(ms / 1000));
+  const days = Math.floor(totalSeconds / 86400);
+  const hours = Math.floor((totalSeconds % 86400) / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+
+  return `${days}d ${String(hours).padStart(2, '0')}h ${String(minutes).padStart(2, '0')}m ${String(seconds).padStart(2, '0')}s`;
+}
+
+function updateStatus() {
+  const now = new Date();
+  const year = now.getFullYear();
+  const midnightEst = new Date(Date.UTC(year, 10, 4, 5, 0, 0));
+  const yesTimeEst = new Date(Date.UTC(year, 10, 4, 23, 0, 0));
+
+  if (now < midnightEst) {
+    statusEl.textContent = 'NO';
     return;
   }
 
-  const EVENT_DATE = new Date(Date.UTC(new Date().getFullYear(), 10, 4, 23, 0, 0));
-
-  function formatCountdown(ms) {
-    const totalSeconds = Math.max(0, Math.floor(ms / 1000));
-    const days = Math.floor(totalSeconds / 86400);
-    const hours = Math.floor((totalSeconds % 86400) / 3600);
-    const minutes = Math.floor((totalSeconds % 3600) / 60);
-    const seconds = totalSeconds % 60;
-
-    return `${days}d ${String(hours).padStart(2, '0')}h ${String(minutes).padStart(2, '0')}m ${String(seconds).padStart(2, '0')}s`;
+  if (now < yesTimeEst) {
+    statusEl.textContent = 'SOON';
+    return;
   }
 
-  function updateStatus() {
-    const now = new Date();
-    const year = now.getFullYear();
-    const midnightEst = new Date(Date.UTC(year, 10, 4, 5, 0, 0));
-    const yesTimeEst = new Date(Date.UTC(year, 10, 4, 23, 0, 0));
+  statusEl.textContent = 'YES';
+}
 
-    if (now < midnightEst) {
-      statusEl.textContent = 'NO';
-      return;
-    }
+function updateCountdown() {
+  const now = new Date();
+  const diff = EVENT_DATE.getTime() - now.getTime();
 
-    if (now < yesTimeEst) {
-      statusEl.textContent = 'SOON';
-      return;
-    }
-
-    statusEl.textContent = 'YES';
+  if (diff <= 0) {
+    countdownEl.textContent = '0d 00h 00m 00s';
+    return;
   }
 
-  function updateCountdown() {
-    const now = new Date();
-    const diff = EVENT_DATE.getTime() - now.getTime();
+  countdownEl.textContent = formatCountdown(diff);
+}
 
-    if (diff <= 0) {
-      countdownEl.textContent = '0d 00h 00m 00s';
-      return;
-    }
-
-    countdownEl.textContent = formatCountdown(diff);
-  }
-
+updateStatus();
+updateCountdown();
+setInterval(() => {
   updateStatus();
   updateCountdown();
-  setInterval(() => {
-    updateStatus();
-    updateCountdown();
-  }, 1000);
-});
+}, 1000);
