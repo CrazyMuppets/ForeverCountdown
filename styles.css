@@ -33,23 +33,25 @@ body {
 }
 
 .status {
-  font-size: clamp(6rem, 22vw, 24rem);
+  font-size: clamp(5rem, 20vw, 16rem);
   font-weight: 900;
   letter-spacing: 0.08em;
   text-transform: uppercase;
+  color: var(--no);
   line-height: 1;
   user-select: none;
-  text-shadow: 0 0 20px rgba(255, 255, 255, 0.15);
+  text-shadow: 0 0 16px rgba(239, 68, 68, 0.25);
 }
 
-.status.no {
-  color: var(--no);
-}
-
-.status.soon {
-  color: var(--soon);
-}
-
-.status.yes {
-  color: var(--yes);
+.countdown {
+  margin-top: 1rem;
+  font-size: clamp(1.6rem, 4vw, 4rem);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text);
+  text-align: center;
+  line-height: 1.2;
+  user-select: none;
+  text-shadow: 0 0 16px rgba(255, 255, 255, 0.12);
 }
